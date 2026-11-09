@@ -1,0 +1,14 @@
+{
+    "name": "flywp/compose-templates",
+    "description": "The Docker Compose App templates of FlyWP, and the check of each template.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2",
+        "justinrainbow/json-schema": "^6.0",
+        "symfony/yaml": "^7.0"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}

@@ -1,0 +1,17 @@
+services:
+  app:
+    image: vaultwarden/server:1.37.3
+    mem_limit: 256m
+    restart: unless-stopped
+    expose:
+      - "80"
+    environment:
+      DOMAIN: ${SITE_URL}
+      # Nobody makes an account alone: the admin invites each user from /admin.
+      SIGNUPS_ALLOWED: "false"
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
+    volumes:
+      - data:/data
+
+volumes:
+  data: {}

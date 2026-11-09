@@ -1,0 +1,32 @@
+{
+  "slug": "mautic",
+  "version": "1.0.0",
+  "name": "Mautic",
+  "category": "Email and marketing",
+  "summary": "Marketing automation and email campaigns.",
+  "description": "Mautic sends email campaigns, tracks the contacts of your websites and runs marketing workflows. For agencies and marketing teams that want their own marketing platform.",
+  "licence": "GPL v3",
+  "licence_note": "Free to self-host, also for commercial use. If you share a changed copy of Mautic, you must share its code.",
+  "cpu": 2,
+  "memory_mb": 2624,
+  "disk_gb": 3,
+  "domain_service": "app",
+  "domain_port": 80,
+  "settings": [],
+  "secrets": [
+    {
+      "name": "DB_PASSWORD",
+      "kind": "password"
+    },
+    {
+      "name": "DB_ROOT_PASSWORD",
+      "kind": "password"
+    }
+  ],
+  "url_setting": null,
+  "host_setting": null,
+  "website": "https://www.mautic.org",
+  "whats_new": "The first version of the template.",
+  "first_steps": "Open the app at once and finish the installer: the first person who opens it makes the admin account. The cron and worker services send the campaigns and the emails.",
+  "security": false
+}

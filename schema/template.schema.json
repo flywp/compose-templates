@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/flywp/compose-templates/schema/template.schema.json",
+  "title": "FlyWP Docker Compose App template",
+  "description": "The template.json of one template. FlyWP reads the services from docker-compose.yml.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "slug", "version", "name", "category", "summary", "description", "licence", "licence_note",
+    "cpu", "memory_mb", "disk_gb", "domain_service", "domain_port", "settings", "secrets",
+    "url_setting", "host_setting", "website", "whats_new", "first_steps"
+  ],
+  "properties": {
+    "slug": {
+      "description": "The name of the folder: lower case letters, digits and hyphens.",
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "maxLength": 40
+    },
+    "version": {
+      "description": "The version of the template (not of the app). Make it higher in each change.",
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "name": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "category": {
+      "description": "The filter of the template list. A new category needs a change of this schema.",
+      "enum": [
+        "AI",
+        "Analytics",
+        "Automation",
+        "CMS and content",
+        "Developer tools",
+        "Email and marketing",
+        "Productivity and files",
+        "Security and networking"
+      ]
+    },
+    "summary": { "description": "One line for the card.", "type": "string", "minLength": 1, "maxLength": 80 },
+    "description": {
+      "description": "Two or three sentences: what the app does and who it is for.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 600
+    },
+    "licence": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "licence_note": {
+      "description": "What the licence means for the customer.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "cpu": { "description": "The CPU cores that the app needs at least.", "type": "integer", "minimum": 1, "maximum": 16 },
+    "memory_mb": {
+      "description": "The memory limits (mem_limit) of the services together, in MB.",
+      "type": "integer",
+      "minimum": 64
+    },
+    "disk_gb": { "description": "The disk that the app needs at least, in GB.", "type": "integer", "minimum": 1 },
+    "domain_service": { "description": "The service that the domain of the app goes to.", "type": "string", "minLength": 1 },
+    "domain_port": { "description": "The port of that service (in its expose).", "type": "integer", "minimum": 1, "maximum": 65535 },
+    "settings": {
+      "description": "The values that the person types at the create.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "label"],
+        "properties": {
+          "name": { "$ref": "#/definitions/variable" },
+          "label": { "type": "string", "minLength": 1, "maxLength": 60 },
+          "rule": { "enum": ["text", "email", "url"] },
+          "help": { "type": ["string", "null"], "maxLength": 200 },
+          "secret": { "description": "The value is a password: FlyWP saves it as a secret.", "type": "boolean" }
+        }
+      }
+    },
+    "secrets": {
+      "description": "The values that FlyWP makes at the create, saved as secrets.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "kind"],
+        "properties": {
+          "name": { "$ref": "#/definitions/variable" },
+          "kind": {
+            "description": "password: 32 letters and digits. hex-32: 32 random bytes as hex. base64-32 and base64-64: random bytes as base64.",
+            "enum": ["password", "hex-32", "base64-32", "base64-64"]
+          }
+        }
+      }
+    },
+    "url_setting": {
+      "description": "The variable that gets the address of the app (https://<domain>).",
+      "oneOf": [{ "$ref": "#/definitions/variable" }, { "type": "null" }]
+    },
+    "host_setting": {
+      "description": "The variable that gets the domain of the app.",
+      "oneOf": [{ "$ref": "#/definitions/variable" }, { "type": "null" }]
+    },
+    "website": { "type": "string", "pattern": "^https://" },
+    "whats_new": {
+      "description": "What this version of the template changes. Shown with the update offer.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "first_steps": {
+      "description": "What the person does when the app runs: the first sign-in, who becomes the admin.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 600
+    },
+    "security": {
+      "description": "This version fixes a security problem: FlyWP shows its update in red.",
+      "type": "boolean"
+    }
+  },
+  "definitions": {
+    "variable": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$", "maxLength": 64 }
+  }
+}

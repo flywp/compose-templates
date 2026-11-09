@@ -1,0 +1,39 @@
+{
+  "slug": "open-webui",
+  "version": "1.0.0",
+  "name": "Open WebUI",
+  "category": "AI",
+  "summary": "A chat interface for AI models.",
+  "description": "Open WebUI is a chat interface for large language models, also for models that run on your own server. Teams use it to give each person one place to talk to AI models.",
+  "licence": "Open WebUI License",
+  "licence_note": "Free to self-host. Keep the Open WebUI name and logo when more than 50 people use it in 30 days, unless you have a licence from Open WebUI.",
+  "cpu": 1,
+  "memory_mb": 2048,
+  "disk_gb": 4,
+  "domain_service": "app",
+  "domain_port": 8080,
+  "settings": [
+    {
+      "name": "ADMIN_EMAIL",
+      "label": "Admin email",
+      "rule": "email",
+      "help": "You sign in with this email. The password is in the environment variable ADMIN_PASSWORD."
+    }
+  ],
+  "secrets": [
+    {
+      "name": "SECRET_KEY",
+      "kind": "hex-32"
+    },
+    {
+      "name": "ADMIN_PASSWORD",
+      "kind": "password"
+    }
+  ],
+  "url_setting": "SITE_URL",
+  "host_setting": null,
+  "website": "https://openwebui.com",
+  "whats_new": "The first version of the template.",
+  "first_steps": "Sign in with your admin email and the password in the environment variable ADMIN_PASSWORD (Environment, Reveal). Change the password in Open WebUI: a change of the variable later does not change it. Then add a model provider in the admin settings.",
+  "security": false
+}

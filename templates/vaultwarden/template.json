@@ -1,0 +1,28 @@
+{
+  "slug": "vaultwarden",
+  "version": "1.0.0",
+  "name": "Vaultwarden",
+  "category": "Security and networking",
+  "summary": "A password manager for teams.",
+  "description": "Vaultwarden is a light server for the Bitwarden apps. A team keeps its passwords on its own server and uses the Bitwarden apps and browser extensions to reach them.",
+  "licence": "AGPL v3",
+  "licence_note": "Free to self-host. If you change its code and offer it as a service, you must share your changes.",
+  "cpu": 1,
+  "memory_mb": 256,
+  "disk_gb": 1,
+  "domain_service": "app",
+  "domain_port": 80,
+  "settings": [],
+  "secrets": [
+    {
+      "name": "ADMIN_TOKEN",
+      "kind": "password"
+    }
+  ],
+  "url_setting": "SITE_URL",
+  "host_setting": null,
+  "website": "https://github.com/dani-garcia/vaultwarden",
+  "whats_new": "The first version of the template.",
+  "first_steps": "Open the address of the app with /admin at its end, and sign in with the token in the environment variable ADMIN_TOKEN (Environment, Reveal). Invite each user there; a user then opens /#/signup and registers with the invited email.",
+  "security": false
+}

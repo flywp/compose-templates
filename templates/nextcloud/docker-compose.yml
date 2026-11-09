@@ -1,0 +1,71 @@
+services:
+  app:
+    image: nextcloud:35.0.1-apache
+    mem_limit: 768m
+    restart: unless-stopped
+    expose:
+      - "80"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      # The install runs at the first start, with this admin: no setup page for a visitor.
+      NEXTCLOUD_ADMIN_USER: admin
+      NEXTCLOUD_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      NEXTCLOUD_TRUSTED_DOMAINS: ${SITE_HOST}
+      TRUSTED_PROXIES: 10.0.0.0/8 172.16.0.0/12 192.168.0.0/16
+      OVERWRITEPROTOCOL: https
+      OVERWRITECLIURL: ${SITE_URL}
+      APACHE_DISABLE_REWRITE_IP: "1"
+    volumes:
+      - html:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  # The background jobs, each 5 minutes.
+  cron:
+    image: nextcloud:35.0.1-apache
+    mem_limit: 256m
+    restart: unless-stopped
+    entrypoint: /cron.sh
+    volumes:
+      - html:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  db:
+    image: mariadb:11.4.13
+    mem_limit: 512m
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: nextcloud
+      MARIADB_USER: nextcloud
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_AUTO_UPGRADE: "1"
+      MARIADB_DISABLE_UPGRADE_BACKUP: "1"
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:8.10.2-alpine
+    mem_limit: 128m
+    restart: unless-stopped
+
+volumes:
+  html: {}
+  db: {}

@@ -1,0 +1,70 @@
+services:
+  app:
+    image: ghcr.io/umami-software/umami:3.4.0
+    mem_limit: 512m
+    restart: unless-stopped
+    init: true
+    expose:
+      - "3000"
+    environment:
+      DATABASE_URL: postgresql://umami:${DB_PASSWORD}@db:5432/umami
+      APP_SECRET: ${APP_SECRET}
+      TWO_FACTOR_ENCRYPTION_KEY: ${TWO_FACTOR_KEY}
+    # Checked often: the default password goes as soon as the app answers.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/heartbeat || exit 1"]
+      interval: 3s
+      timeout: 3s
+      retries: 100
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Umami makes the user "admin" with the password "umami". This replaces that password with the
+  # setting ADMIN_PASSWORD, one time: when the password is not "umami" any more, it does nothing.
+  admin-password:
+    image: ghcr.io/umami-software/umami:3.4.0
+    mem_limit: 128m
+    restart: "no"
+    environment:
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    entrypoint:
+      - node
+      - -e
+      - |
+        const app = 'http://app:3000';
+        const json = { 'content-type': 'application/json' };
+        const login = (password) => fetch(app + '/api/auth/login', { method: 'POST', headers: json, body: JSON.stringify({ username: 'admin', password: password }) });
+        (async () => {
+          const first = await login('umami');
+          // 401: the password is not "umami" any more. Any other answer is a failure, not a pass.
+          if (first.status === 401) { process.exit(0); }
+          if (!first.ok) { throw new Error('the login answered ' + first.status); }
+          const token = (await first.json()).token;
+          const change = await fetch(app + '/api/me/password', { method: 'POST', headers: { ...json, authorization: 'Bearer ' + token }, body: JSON.stringify({ currentPassword: 'umami', newPassword: process.env.ADMIN_PASSWORD }) });
+          if (!change.ok) { throw new Error('the change answered ' + change.status); }
+          const check = await login(process.env.ADMIN_PASSWORD);
+          if (!check.ok) { throw new Error('the new password does not sign in'); }
+        })().catch((error) => { console.error(error.message); process.exit(1); });
+    depends_on:
+      app:
+        condition: service_healthy
+
+  db:
+    image: postgres:16.15-alpine
+    mem_limit: 512m
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: umami
+      POSTGRES_DB: umami
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db: {}

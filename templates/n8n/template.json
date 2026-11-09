@@ -1,0 +1,28 @@
+{
+  "slug": "n8n",
+  "version": "1.0.0",
+  "name": "n8n",
+  "category": "Automation",
+  "summary": "Workflow automation for teams.",
+  "description": "n8n connects your apps and services and runs workflows on a schedule or on an event. Teams use it to automate routine work with no code or with a little code.",
+  "licence": "Sustainable Use License",
+  "licence_note": "Free for use inside your own business, and for personal or non-commercial use. To offer n8n to others for money, you need a licence from n8n.",
+  "cpu": 1,
+  "memory_mb": 1024,
+  "disk_gb": 2,
+  "domain_service": "app",
+  "domain_port": 5678,
+  "settings": [],
+  "secrets": [
+    {
+      "name": "ENCRYPTION_KEY",
+      "kind": "hex-32"
+    }
+  ],
+  "url_setting": "SITE_URL",
+  "host_setting": "SITE_HOST",
+  "website": "https://n8n.io",
+  "whats_new": "The first version of the template.",
+  "first_steps": "Open the app at once and make the owner account: the first person who opens it becomes the owner.",
+  "security": false
+}

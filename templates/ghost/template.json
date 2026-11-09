@@ -1,0 +1,32 @@
+{
+  "slug": "ghost",
+  "version": "1.0.0",
+  "name": "Ghost",
+  "category": "CMS and content",
+  "summary": "Blog and newsletter platform.",
+  "description": "Ghost is a publishing platform for blogs, newsletters and paid memberships. Writers and small media teams use it to publish and to send each post by email.",
+  "licence": "MIT",
+  "licence_note": "Free to self-host, also for commercial use.",
+  "cpu": 1,
+  "memory_mb": 1792,
+  "disk_gb": 2,
+  "domain_service": "app",
+  "domain_port": 2368,
+  "settings": [],
+  "secrets": [
+    {
+      "name": "DB_PASSWORD",
+      "kind": "password"
+    },
+    {
+      "name": "DB_ROOT_PASSWORD",
+      "kind": "password"
+    }
+  ],
+  "url_setting": "SITE_URL",
+  "host_setting": null,
+  "website": "https://ghost.org",
+  "whats_new": "The first version of the template.",
+  "first_steps": "Open the address of the app with /ghost at its end at once, and make the owner account: the first person who opens it becomes the owner. Ghost sends no email until you add the mail__ environment variables of a mail server (Environment, Add Variable).",
+  "security": false
+}

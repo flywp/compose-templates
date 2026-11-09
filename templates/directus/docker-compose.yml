@@ -1,0 +1,59 @@
+services:
+  app:
+    image: directus/directus:12.4.1
+    mem_limit: 768m
+    restart: unless-stopped
+    expose:
+      - "8055"
+    environment:
+      PUBLIC_URL: ${SITE_URL}
+      SECRET: ${SECRET}
+      DB_CLIENT: pg
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_DATABASE: directus
+      DB_USER: directus
+      DB_PASSWORD: ${DB_PASSWORD}
+      # The admin is made at the first start: no setup page for a visitor.
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      # The requests come through the web container of FlyWP.
+      IP_TRUST_PROXY: "true"
+      # The app is always on https behind FlyWP.
+      SESSION_COOKIE_SECURE: "true"
+      REFRESH_TOKEN_COOKIE_SECURE: "true"
+      # Image transforms hold memory: a few at a time, inside the limit of the service.
+      ASSETS_TRANSFORM_MAX_CONCURRENT: "4"
+      TELEMETRY: "false"
+    volumes:
+      - uploads:/directus/uploads
+      - extensions:/directus/extensions
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8055/server/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16.15-alpine
+    mem_limit: 512m
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: directus
+      POSTGRES_DB: directus
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U directus"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  uploads: {}
+  extensions: {}
+  db: {}

@@ -1,0 +1,117 @@
+services:
+  # Mautic reads its trusted proxies only from a file: FlyWP's web container is one, so links are https.
+  proxy-settings:
+    image: mautic/mautic:7.2.1-apache
+    mem_limit: 64m
+    restart: "no"
+    entrypoint:
+      - sh
+      - -c
+      - |
+        cat > /var/www/html/config/parameters_local.php <<'EOF'
+        <?php
+        $$parameters = ['trusted_proxies' => ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']];
+        EOF
+    volumes:
+      - config:/var/www/html/config
+
+  app:
+    image: mautic/mautic:7.2.1-apache
+    mem_limit: 768m
+    restart: unless-stopped
+    expose:
+      - "80"
+    environment:
+      DOCKER_MAUTIC_ROLE: mautic_web
+      MAUTIC_DB_HOST: db
+      MAUTIC_DB_PORT: "3306"
+      MAUTIC_DB_DATABASE: mautic
+      MAUTIC_DB_USER: mautic
+      MAUTIC_DB_PASSWORD: ${DB_PASSWORD}
+      MAUTIC_MESSENGER_DSN_EMAIL: doctrine://default
+      MAUTIC_MESSENGER_DSN_HIT: doctrine://default
+    volumes:
+      - config:/var/www/html/config
+      - logs:/var/www/html/var/logs
+      - media-files:/var/www/html/docroot/media/files
+      - media-images:/var/www/html/docroot/media/images
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s -o /dev/null http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 100
+    depends_on:
+      db:
+        condition: service_healthy
+      proxy-settings:
+        condition: service_completed_successfully
+
+  # Segments and campaigns, each 15 minutes.
+  cron:
+    image: mautic/mautic:7.2.1-apache
+    mem_limit: 256m
+    restart: unless-stopped
+    environment:
+      DOCKER_MAUTIC_ROLE: mautic_cron
+      MAUTIC_DB_HOST: db
+      MAUTIC_DB_PORT: "3306"
+      MAUTIC_DB_DATABASE: mautic
+      MAUTIC_DB_USER: mautic
+      MAUTIC_DB_PASSWORD: ${DB_PASSWORD}
+      MAUTIC_MESSENGER_DSN_EMAIL: doctrine://default
+      MAUTIC_MESSENGER_DSN_HIT: doctrine://default
+    volumes:
+      - config:/var/www/html/config
+      - logs:/var/www/html/var/logs
+      - media-files:/var/www/html/docroot/media/files
+      - media-images:/var/www/html/docroot/media/images
+    depends_on:
+      app:
+        condition: service_healthy
+
+  # The queue of emails and page hits.
+  worker:
+    image: mautic/mautic:7.2.1-apache
+    mem_limit: 512m
+    restart: unless-stopped
+    environment:
+      DOCKER_MAUTIC_ROLE: mautic_worker
+      MAUTIC_DB_HOST: db
+      MAUTIC_DB_PORT: "3306"
+      MAUTIC_DB_DATABASE: mautic
+      MAUTIC_DB_USER: mautic
+      MAUTIC_DB_PASSWORD: ${DB_PASSWORD}
+      MAUTIC_MESSENGER_DSN_EMAIL: doctrine://default
+      MAUTIC_MESSENGER_DSN_HIT: doctrine://default
+    volumes:
+      - config:/var/www/html/config
+      - logs:/var/www/html/var/logs
+      - media-files:/var/www/html/docroot/media/files
+      - media-images:/var/www/html/docroot/media/images
+    depends_on:
+      app:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4.11
+    mem_limit: 1024m
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: mautic
+      MYSQL_USER: mautic
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  config: {}
+  logs: {}
+  media-files: {}
+  media-images: {}
+  db: {}

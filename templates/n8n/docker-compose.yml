@@ -1,0 +1,21 @@
+services:
+  app:
+    image: n8nio/n8n:2.41.6
+    mem_limit: 1024m
+    restart: unless-stopped
+    expose:
+      - "5678"
+    environment:
+      N8N_HOST: ${SITE_HOST}
+      N8N_PROTOCOL: https
+      N8N_PROXY_HOPS: "1"
+      N8N_WEBHOOK_URL: ${SITE_URL}/
+      N8N_ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      GENERIC_TIMEZONE: UTC
+      TZ: UTC
+    volumes:
+      - data:/home/node/.n8n
+
+volumes:
+  data: {}

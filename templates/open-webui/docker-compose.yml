@@ -1,0 +1,20 @@
+services:
+  app:
+    image: ghcr.io/open-webui/open-webui:v0.11.4
+    mem_limit: 2048m
+    restart: unless-stopped
+    expose:
+      - "8080"
+    environment:
+      WEBUI_URL: ${SITE_URL}
+      CORS_ALLOW_ORIGIN: ${SITE_URL}
+      WEBUI_SECRET_KEY: ${SECRET_KEY}
+      # The admin is made at the first start: no "Create Admin Account" page for a visitor.
+      WEBUI_ADMIN_NAME: Admin
+      WEBUI_ADMIN_EMAIL: ${ADMIN_EMAIL}
+      WEBUI_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    volumes:
+      - data:/app/backend/data
+
+volumes:
+  data: {}

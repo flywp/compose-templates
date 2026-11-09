@@ -1,0 +1,43 @@
+{
+  "slug": "directus",
+  "version": "1.0.0",
+  "name": "Directus",
+  "category": "CMS and content",
+  "summary": "Headless CMS and data platform with an API.",
+  "description": "Directus puts an admin app and a REST and GraphQL API on top of a database, so your team edits the content and your websites and apps read it. For developers and agencies who build sites with a headless CMS.",
+  "licence": "BSL 1.1",
+  "licence_note": "Free for production use by an organisation whose yearly revenue, budget or funding is less than 5 million US dollars. A larger organisation needs a licence from Directus.",
+  "cpu": 1,
+  "memory_mb": 1280,
+  "disk_gb": 4,
+  "domain_service": "app",
+  "domain_port": 8055,
+  "settings": [
+    {
+      "name": "ADMIN_EMAIL",
+      "label": "Admin email",
+      "rule": "email",
+      "help": "You sign in with this email. The password is in the environment variable ADMIN_PASSWORD."
+    }
+  ],
+  "secrets": [
+    {
+      "name": "DB_PASSWORD",
+      "kind": "password"
+    },
+    {
+      "name": "SECRET",
+      "kind": "base64-64"
+    },
+    {
+      "name": "ADMIN_PASSWORD",
+      "kind": "password"
+    }
+  ],
+  "url_setting": "SITE_URL",
+  "host_setting": null,
+  "website": "https://directus.io",
+  "whats_new": "The first version of the template.",
+  "first_steps": "Sign in with your admin email and the password in the environment variable ADMIN_PASSWORD (Environment, Reveal). Change the password in Directus: a change of the variable later does not change it. The first start makes the database and takes about a minute.",
+  "security": false
+}

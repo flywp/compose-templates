@@ -1,0 +1,40 @@
+{
+  "slug": "umami",
+  "version": "1.0.0",
+  "name": "Umami",
+  "category": "Analytics",
+  "summary": "Simple, privacy-friendly web analytics.",
+  "description": "Umami counts the visits of your websites with no cookies and shows them on a clean dashboard. For site owners who want simple analytics that respects privacy.",
+  "licence": "MIT",
+  "licence_note": "Free to self-host, also for commercial use.",
+  "cpu": 1,
+  "memory_mb": 1152,
+  "disk_gb": 2,
+  "domain_service": "app",
+  "domain_port": 3000,
+  "settings": [],
+  "secrets": [
+    {
+      "name": "DB_PASSWORD",
+      "kind": "password"
+    },
+    {
+      "name": "APP_SECRET",
+      "kind": "hex-32"
+    },
+    {
+      "name": "TWO_FACTOR_KEY",
+      "kind": "hex-32"
+    },
+    {
+      "name": "ADMIN_PASSWORD",
+      "kind": "password"
+    }
+  ],
+  "url_setting": null,
+  "host_setting": null,
+  "website": "https://umami.is",
+  "whats_new": "The first version of the template.",
+  "first_steps": "Sign in as admin with the password in the environment variable ADMIN_PASSWORD (Environment, Reveal). FlyWP replaces the default password of Umami at the first start. Change the password in Umami: a change of the variable later does not change it.",
+  "security": false
+}

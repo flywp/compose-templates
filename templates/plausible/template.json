@@ -1,0 +1,36 @@
+{
+  "slug": "plausible",
+  "version": "1.0.0",
+  "name": "Plausible Community Edition",
+  "category": "Analytics",
+  "summary": "Privacy-friendly web analytics.",
+  "description": "Plausible counts the visits of your websites with no cookies and no personal data. It shows the pages, sources and goals on one simple dashboard. For agencies and site owners who want analytics that respects privacy.",
+  "licence": "AGPL v3",
+  "licence_note": "Free to self-host. If you change its code and offer it as a service, you must share your changes.",
+  "cpu": 1,
+  "memory_mb": 2112,
+  "disk_gb": 10,
+  "domain_service": "app",
+  "domain_port": 8000,
+  "settings": [],
+  "secrets": [
+    {
+      "name": "SECRET_KEY_BASE",
+      "kind": "base64-64"
+    },
+    {
+      "name": "TOTP_VAULT_KEY",
+      "kind": "base64-32"
+    },
+    {
+      "name": "DB_PASSWORD",
+      "kind": "password"
+    }
+  ],
+  "url_setting": "SITE_URL",
+  "host_setting": null,
+  "website": "https://plausible.io/self-hosted-web-analytics",
+  "whats_new": "The first version of the template.",
+  "first_steps": "Open the app at once and make the first account: the first person who registers becomes the owner. After that, only people that you invite can register.",
+  "security": false
+}

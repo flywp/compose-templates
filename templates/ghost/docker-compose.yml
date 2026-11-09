@@ -1,0 +1,43 @@
+services:
+  app:
+    image: ghost:6.67.0-alpine
+    mem_limit: 768m
+    restart: unless-stopped
+    expose:
+      - "2368"
+    environment:
+      NODE_ENV: production
+      url: ${SITE_URL}
+      database__client: mysql
+      database__connection__host: db
+      database__connection__user: ghost
+      database__connection__password: ${DB_PASSWORD}
+      database__connection__database: ghost
+      # With no mail server, a sign-in from a new device cannot get its code by email.
+      security__staffDeviceVerification: "false"
+    volumes:
+      - content:/var/lib/ghost/content
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.4.11
+    mem_limit: 1024m
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ghost
+      MYSQL_USER: ghost
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  content: {}
+  db: {}
