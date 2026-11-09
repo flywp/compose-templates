@@ -23,6 +23,7 @@ Make the folder `templates/<slug>/`. The slug has lower case letters, digits and
 - `settings`: the values that the person types at the create (an admin email, for example). `rule` is `text`, `email` or `url`. `secret: true` saves the value as a secret.
 - `secrets`: the values that FlyWP makes at the create. `kind` is `password`, `hex-32`, `base64-32` or `base64-64`.
 - `url_setting`: the variable that gets the address of the app (`https://<domain>`). `host_setting`: the variable that gets the domain. Use `null` when the app does not need it.
+- `website`: the address of the project. It starts with `https://`.
 - `whats_new`: what this version of the template changes. FlyWP shows it with the update.
 - `first_steps`: what the person does when the app runs. Say who becomes the admin and where the password is.
 - `security`: `true` when this version fixes a security problem. FlyWP shows its update in red.

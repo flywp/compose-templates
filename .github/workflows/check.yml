@@ -27,4 +27,5 @@ jobs:
       - name: Check each template
         run: php bin/check.php --docker
         env:
-          BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
+          # The commit that the pull request starts from: a later push to main does not change the rule.
+          BASE_REF: ${{ github.event.pull_request.base.sha }}

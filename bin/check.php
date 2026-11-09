@@ -20,7 +20,6 @@ require __DIR__ . '/../vendor/autoload.php';
 
 const ROOT = __DIR__ . '/..';
 const LOGO_MAX_BYTES = 100 * 1024;
-const SECRET_KINDS = ['password', 'hex-32', 'base64-32', 'base64-64'];
 
 $docker = in_array('--docker', $argv, true);
 $base = getenv('BASE_REF') ?: null;
@@ -116,11 +115,11 @@ function values(array $template): array
     }
 
     if ($template['url_setting'] !== null) {
-        $values[$template['url_setting']] = 'https://app.example.com';
+        $values[$template['url_setting']] = 'https://shop.example.com';
     }
 
     if ($template['host_setting'] !== null) {
-        $values[$template['host_setting']] = 'app.example.com';
+        $values[$template['host_setting']] = 'shop.example.com';
     }
 
     return $values;
@@ -192,10 +191,7 @@ function checkCompose(array $template, string $text, array $file, Closure $fail)
 
     $web = $services[$template['domain_service']] ?? null;
     // The ports of the service: its expose, and the container side of its ports ("8080:80" is 80).
-    $ports = array_map(
-        fn (mixed $port): int => (int) preg_replace('/\/.*$/', '', (string) last(explode(':', (string) $port))),
-        [...($web['expose'] ?? []), ...($web['ports'] ?? [])],
-    );
+    $ports = array_map(fn (mixed $port): int => (int) preg_replace('/^.*:|\/.*$/', '', (string) $port), [...($web['expose'] ?? []), ...($web['ports'] ?? [])]);
 
     if ($web === null) {
         $fail("domain_service {$template['domain_service']} is not a service of the file");
@@ -204,13 +200,6 @@ function checkCompose(array $template, string $text, array $file, Closure $fail)
     }
 }
 
-/**
- * @param list<string> $parts
- */
-function last(array $parts): string
-{
-    return $parts[array_key_last($parts)];
-}
 
 /**
  * A one-off script of a service ([sh|node, -c|-e, script]) that its program can read.
@@ -289,14 +278,14 @@ function checkWithDocker(string $folder, array $template, Closure $fail): void
 function checkVersion(string $slug, array $template, string $base, Closure $fail): void
 {
     $path = "templates/{$slug}";
-    exec('git -C ' . escapeshellarg(ROOT) . ' cat-file -e ' . escapeshellarg("{$base}:{$path}/template.json") . ' 2>/dev/null', $output, $missing);
+    exec('git -C ' . escapeshellarg(ROOT) . ' cat-file -e ' . escapeshellarg("{$base}:{$path}/template.json") . ' 2>/dev/null', result_code: $missing);
 
     // A new template: any version.
     if ($missing !== 0) {
         return;
     }
 
-    exec('git -C ' . escapeshellarg(ROOT) . ' diff --quiet ' . escapeshellarg($base) . ' -- ' . escapeshellarg($path), $output, $changed);
+    exec('git -C ' . escapeshellarg(ROOT) . ' diff --quiet ' . escapeshellarg($base) . ' -- ' . escapeshellarg($path), result_code: $changed);
 
     if ($changed === 0) {
         return;
