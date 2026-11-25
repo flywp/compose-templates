@@ -1,6 +1,6 @@
 services:
   app:
-    image: n8nio/n8n:2.41.6
+    image: n8nio/n8n:2.49.6
     mem_limit: 1024m
     restart: unless-stopped
     expose:
