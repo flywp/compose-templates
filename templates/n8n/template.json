@@ -1,6 +1,6 @@
 {
   "slug": "n8n",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "n8n",
   "category": "Automation",
   "summary": "Workflow automation for teams.",
@@ -22,7 +22,7 @@
   "url_setting": "SITE_URL",
   "host_setting": "SITE_HOST",
   "website": "https://n8n.io",
-  "whats_new": "The first version of the template.",
+  "whats_new": "n8n 2.49.6, the current stable release (was 2.41.6).",
   "first_steps": "Open the app at once and make the owner account: the first person who opens it becomes the owner.",
   "security": false
 }
