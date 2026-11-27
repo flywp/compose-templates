@@ -6,7 +6,7 @@
     "require": {
         "php": "^8.2",
         "justinrainbow/json-schema": "^6.0",
-        "symfony/yaml": "^7.0"
+        "symfony/yaml": "^8.1"
     },
     "config": {
         "sort-packages": true
