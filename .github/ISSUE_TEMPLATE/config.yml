@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Help with FlyWP
+    url: https://flywp.com/contact/
+    about: A question about your FlyWP account, a server or an app. FlyWP support answers it.
+  - name: FlyWP docs
+    url: https://flywp.com/docs/
+    about: How to use FlyWP.
+  - name: Report a security problem
+    url: https://github.com/flywp/compose-templates/security/advisories/new
+    about: Only the FlyWP team can read the report.

@@ -1,14 +1,26 @@
+<p align="center">
+  <a href="https://flywp.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset=".github/flywp-logo-dark.svg">
+      <img src=".github/flywp-logo.svg" alt="FlyWP" width="220">
+    </picture>
+  </a>
+</p>
+
 # FlyWP Docker Compose App templates
 
-The templates that FlyWP shows in its template list ("Start from Template") when a person creates a Docker Compose App.
+[FlyWP](https://flywp.com) is a control panel for your own servers. A Docker Compose App is a site type of FlyWP: FlyWP runs a Docker Compose file on your server, with a domain and HTTPS.
+
+The templates of this repository show in the template list of FlyWP ("Start from Template"). A person selects a template, types a few values, and FlyWP deploys the app.
 
 ## How a template gets to FlyWP
 
-1. A person sends a pull request with a new template or a change.
+1. You send a pull request to the `develop` branch.
 2. CI checks each template (`bin/check.php`).
-3. A member of the FlyWP team reviews and merges the pull request.
-4. GitHub tells FlyWP about the merge. FlyWP reads this repository again in about one minute. If the message does not arrive, FlyWP reads the repository each hour.
-5. FlyWP runs its own safety check on each template. A template that fails it does not show, and its last good version stays.
+3. A member of the FlyWP team reviews the pull request and merges it.
+4. The FlyWP team tests `develop` on its test server.
+5. The FlyWP team merges `develop` into `main`. FlyWP reads `main`: a new or changed template shows in FlyWP within one hour.
+6. FlyWP runs its own safety check on each template. A template that fails it does not show, and its last good version stays.
 
 FlyWP keeps its own copy of the templates. A page of FlyWP never reads this repository.
 
@@ -24,15 +36,29 @@ bin/check.php                         the check of each template
 
 ## Check the templates on your computer
 
-You need PHP 8.2 and Composer. For `--docker`, you also need Docker.
+With PHP 8.2 or later and Composer:
 
 ```sh
 composer install
 php bin/check.php            # the rules of each template
-php bin/check.php --docker   # also: docker compose config
-BASE_REF=origin/main php bin/check.php   # also: a changed template has a higher version
+php bin/check.php --docker   # also: docker compose config (needs Docker)
+BASE_REF=origin/develop php bin/check.php   # also: a changed template has a higher version
 ```
 
-## Add or change a template
+With Docker only:
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md).
+```sh
+docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && php bin/check.php'
+```
+
+## Contribute
+
+- To add or change a template, read [CONTRIBUTING.md](CONTRIBUTING.md).
+- To ask for a template or to tell us about a broken one, [open an issue](https://github.com/flywp/compose-templates/issues/new/choose).
+- For a security problem, read [SECURITY.md](SECURITY.md). Do not open a public issue.
+- Everybody who takes part obeys the [code of conduct](CODE_OF_CONDUCT.md).
+
+## Licence
+
+- [MIT](LICENSE).
+- The logos are trademarks of their owners. The licence does not cover them.

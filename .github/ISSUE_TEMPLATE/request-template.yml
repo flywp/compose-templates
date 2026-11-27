@@ -1,0 +1,42 @@
+name: Request a template
+description: Ask for a new app in the template list of FlyWP.
+title: "Template request: "
+labels: ["enhancement"]
+body:
+  - type: input
+    id: app
+    attributes:
+      label: App
+      description: The name of the app.
+    validations:
+      required: true
+  - type: input
+    id: website
+    attributes:
+      label: Website
+      description: The address of the project.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: image
+    attributes:
+      label: Docker image or compose file
+      description: A link to the official Docker image or the official compose file.
+    validations:
+      required: true
+  - type: input
+    id: licence
+    attributes:
+      label: Licence of the app
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: Who uses the app, and what for?
+  - type: checkboxes
+    id: pull-request
+    attributes:
+      label: Pull request
+      options:
+        - label: I can send a pull request for this template.
