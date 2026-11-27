@@ -28,5 +28,6 @@ jobs:
       - name: Check each template
         run: php bin/check.php --docker
         env:
-          # The commit that the pull request starts from: a later push to the base branch does not change the rule.
-          BASE_REF: ${{ github.event.pull_request.base.sha }}
+          # A pull request: the commit that it starts from (a later push to the base branch does not change the rule).
+          # A push: the commit before the push.
+          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}

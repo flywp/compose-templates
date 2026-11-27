@@ -42,13 +42,15 @@ With PHP 8.2 or later and Composer:
 composer install
 php bin/check.php            # the rules of each template
 php bin/check.php --docker   # also: docker compose config (needs Docker)
-BASE_REF=origin/develop php bin/check.php   # also: a changed template has a higher version
+BASE_REF=upstream/develop php bin/check.php   # also: a changed template has a higher version
 ```
+
+In a fork, `upstream` is this repository: `git remote add upstream https://github.com/flywp/compose-templates.git && git fetch upstream`.
 
 With Docker only:
 
 ```sh
-docker run --rm -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && php bin/check.php'
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD":/app -w /app composer:2 sh -c 'composer install -q && php bin/check.php'
 ```
 
 ## Contribute

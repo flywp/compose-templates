@@ -5,7 +5,7 @@
 
 ## Checklist
 
-- [ ] `php bin/check.php --docker` passes.
+- [ ] `php bin/check.php` passes (with `--docker` if you have Docker).
 - [ ] Each image has an exact version tag.
 - [ ] The file uses no key that the safety check of FlyWP refuses (CONTRIBUTING.md).
 - [ ] A changed template has a higher `version` and a new `whats_new`.
