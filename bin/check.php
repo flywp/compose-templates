@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 /*
- * Checks each template of this repository. CI runs it on each pull request and each push to main.
+ * Checks each template of this repository. CI runs it on each pull request and each push to develop and main.
  *
  *   php bin/check.php                     the rules of each template
  *   php bin/check.php --docker            also `docker compose config` of each template
- *   BASE_REF=origin/main php bin/check.php   also: a changed template has a higher version and a new whats_new
+ *   BASE_REF=upstream/develop php bin/check.php   also: a changed template has a higher version and a new whats_new
  *
  * FlyWP runs its own safety check on each template when it reads this repository. A template that
  * fails it does not show in FlyWP. These rules find most problems before the merge.
